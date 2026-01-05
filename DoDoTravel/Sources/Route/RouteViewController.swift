@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import GoogleMaps
+import MapKit
 import CoreLocation
 
 class RouteViewController: UIViewController {
 
-    @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var transportationSegmentedControl: UISegmentedControl!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
@@ -57,6 +57,8 @@ class RouteViewController: UIViewController {
         restAreasTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
 
         activityIndicator.hidesWhenStopped = true
+        
+        mapView.delegate = self
     }
     
     private func setupBannerAd() {
@@ -77,10 +79,14 @@ class RouteViewController: UIViewController {
     private func setupMap() {
         guard let origin = originLocation else { return }
 
-        let camera = GMSCameraPosition.camera(withLatitude: origin.latitude, longitude: origin.longitude, zoom: 12.0)
-        mapView.camera = camera
-        mapView.isMyLocationEnabled = true
-        mapView.settings.myLocationButton = true
+        let region = MKCoordinateRegion(
+            center: origin,
+            latitudinalMeters: 10000,
+            longitudinalMeters: 10000
+        )
+        mapView.setRegion(region, animated: false)
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .none
     }
 
     @objc private func transportationChanged() {
@@ -140,11 +146,17 @@ class RouteViewController: UIViewController {
 
     private func drawRouteOnMap(_ routeInfo: RouteInfo) {
         // TODO: Polyline 디코딩 및 지도에 표시
-        // let path = GMSPath(fromEncodedPath: routeInfo.polyline)
-        // let polyline = GMSPolyline(path: path)
-        // polyline.strokeColor = .blue
-        // polyline.strokeWidth = 5.0
-        // polyline.map = mapView
+        // OpenRouteService나 Kakao API 응답에서 polyline을 파싱하여 MKPolyline으로 변환
+        // let coordinates = decodePolyline(routeInfo.polyline)
+        // let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        // mapView.addOverlay(polyline)
+    }
+    
+    // Polyline 디코딩 헬퍼 함수 (필요시 구현)
+    private func decodePolyline(_ encoded: String) -> [CLLocationCoordinate2D] {
+        // Google Polyline 알고리즘으로 디코딩
+        // 구현 필요
+        return []
     }
 
     private func loadGasStationsAndRestAreas() {
@@ -157,6 +169,20 @@ class RouteViewController: UIViewController {
     }
 }
 
+// MARK: - MKMapViewDelegate
+extension RouteViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if let polyline = overlay as? MKPolyline {
+            let renderer = MKPolylineRenderer(polyline: polyline)
+            renderer.strokeColor = .systemBlue
+            renderer.lineWidth = 5.0
+            return renderer
+        }
+        return MKOverlayRenderer(overlay: overlay)
+    }
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension RouteViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == gasStationsTableView {

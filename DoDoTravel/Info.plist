@@ -81,9 +81,17 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>프로필 사진을 선택하기 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	
-	<!-- Google Maps API Key -->
-	<key>GMSApiKey</key>
-	<string>YOUR_GOOGLE_MAPS_API_KEY</string>
+	<!-- Kakao REST API Key -->
+	<key>KakaoRESTAPIKey</key>
+	<string>YOUR_KAKAO_REST_API_KEY</string>
+	
+	<!-- Tour API Key (한국관광공사) -->
+	<key>TourAPIKey</key>
+	<string>YOUR_TOUR_API_KEY</string>
+	
+	<!-- OpenRouteService API Key (선택사항, 무료 발급 가능) -->
+	<key>OpenRouteServiceAPIKey</key>
+	<string></string>
 	
 	<!-- AdMob App ID -->
 	<key>GADApplicationIdentifier</key>

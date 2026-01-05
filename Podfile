@@ -6,8 +6,6 @@ target 'DoDoTravel' do
   use_frameworks!
 
   # Pods for DoDoTravel
-  pod 'GoogleMaps'
-  pod 'GooglePlaces'
   pod 'Google-Mobile-Ads-SDK'
   
   target 'DoDoTravelTests' do
