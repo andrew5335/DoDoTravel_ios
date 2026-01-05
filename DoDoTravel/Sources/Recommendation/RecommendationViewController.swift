@@ -17,10 +17,12 @@ class RecommendationViewController: UIViewController {
 
     private var destinations: [Destination] = []
     private let locationManager = CLLocationManager()
+    private var bannerAdView: BannerAdView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupBannerAd()
     }
 
     private func setupUI() {
@@ -36,6 +38,31 @@ class RecommendationViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         emptyLabel.text = "추천 관광지가 없습니다.\n위 버튼을 눌러 추천을 받아보세요."
+    }
+    
+    private func setupBannerAd() {
+        bannerAdView = BannerAdView()
+        view.addSubview(bannerAdView)
+        bannerAdView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let bottomConstraint: NSLayoutConstraint
+        if let tabBarController = tabBarController {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: tabBarController.tabBar.topAnchor)
+        } else {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        }
+        
+        NSLayoutConstraint.activate([
+            bannerAdView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannerAdView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomConstraint,
+            bannerAdView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        tableView.contentInset.bottom = 50
+        tableView.scrollIndicatorInsets.bottom = 50
+        
+        bannerAdView.updateRootViewController(self)
     }
 
     @objc private func getRecommendationsButtonTapped() {

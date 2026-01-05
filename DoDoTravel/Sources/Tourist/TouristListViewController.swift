@@ -14,10 +14,12 @@ class TouristListViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     private var destinations: [Destination] = []
+    private var bannerAdView: BannerAdView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupBannerAd()
         loadTouristSpots()
     }
 
@@ -33,6 +35,33 @@ class TouristListViewController: UIViewController {
         tableView.register(UINib(nibName: "DestinationCell", bundle: nil), forCellReuseIdentifier: "DestinationCell")
 
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    private func setupBannerAd() {
+        bannerAdView = BannerAdView()
+        view.addSubview(bannerAdView)
+        bannerAdView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Tab bar가 있는 경우를 고려하여 bottom constraint 설정
+        let bottomConstraint: NSLayoutConstraint
+        if let tabBarController = tabBarController {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: tabBarController.tabBar.topAnchor)
+        } else {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        }
+        
+        NSLayoutConstraint.activate([
+            bannerAdView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannerAdView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomConstraint,
+            bannerAdView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        // Table view의 bottom constraint 조정
+        tableView.contentInset.bottom = 50
+        tableView.scrollIndicatorInsets.bottom = 50
+        
+        bannerAdView.updateRootViewController(self)
     }
 
     private func loadTouristSpots() {

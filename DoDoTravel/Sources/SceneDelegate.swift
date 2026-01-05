@@ -30,6 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        // 앱이 백그라운드로 전환될 때 전면 광고 표시
+        InterstitialAdManager.shared.showInterstitialAdOnExit()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

@@ -7,6 +7,7 @@
 
 import UIKit
 import GoogleMaps
+import GoogleMobileAds
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             // 직접 API Key 설정 (개발용)
             GMSServices.provideAPIKey("YOUR_GOOGLE_MAPS_API_KEY")
+        }
+        
+        // AdMob 초기화
+        if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+           let plist = NSDictionary(contentsOfFile: path),
+           let appId = plist["GADApplicationIdentifier"] as? String {
+            GADMobileAds.sharedInstance().start(completionHandler: nil)
+        } else {
+            // 기본값으로 초기화 (실제 App ID는 Info.plist에 설정 필요)
+            GADMobileAds.sharedInstance().start(completionHandler: nil)
         }
         
         return true

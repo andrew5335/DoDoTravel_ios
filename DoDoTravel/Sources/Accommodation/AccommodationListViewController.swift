@@ -14,10 +14,12 @@ class AccommodationListViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     private var destinations: [Destination] = []
+    private var bannerAdView: BannerAdView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupBannerAd()
         loadAccommodations()
     }
 
@@ -33,6 +35,31 @@ class AccommodationListViewController: UIViewController {
         tableView.register(UINib(nibName: "DestinationCell", bundle: nil), forCellReuseIdentifier: "DestinationCell")
 
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    private func setupBannerAd() {
+        bannerAdView = BannerAdView()
+        view.addSubview(bannerAdView)
+        bannerAdView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let bottomConstraint: NSLayoutConstraint
+        if let tabBarController = tabBarController {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: tabBarController.tabBar.topAnchor)
+        } else {
+            bottomConstraint = bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        }
+        
+        NSLayoutConstraint.activate([
+            bannerAdView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannerAdView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomConstraint,
+            bannerAdView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        tableView.contentInset.bottom = 50
+        tableView.scrollIndicatorInsets.bottom = 50
+        
+        bannerAdView.updateRootViewController(self)
     }
 
     private func loadAccommodations() {

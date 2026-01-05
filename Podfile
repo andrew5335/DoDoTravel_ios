@@ -8,6 +8,7 @@ target 'DoDoTravel' do
   # Pods for DoDoTravel
   pod 'GoogleMaps'
   pod 'GooglePlaces'
+  pod 'Google-Mobile-Ads-SDK'
   
   target 'DoDoTravelTests' do
     inherit! :search_paths

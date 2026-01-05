@@ -28,10 +28,12 @@ class RouteViewController: UIViewController {
     private var currentRouteInfo: RouteInfo?
     private var gasStations: [GasStation] = []
     private var restAreas: [RestArea] = []
+    private var bannerAdView: BannerAdView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupBannerAd()
         setupMap()
         loadRoute(mode: "driving")
     }
@@ -55,6 +57,21 @@ class RouteViewController: UIViewController {
         restAreasTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
 
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    private func setupBannerAd() {
+        bannerAdView = BannerAdView()
+        view.addSubview(bannerAdView)
+        bannerAdView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            bannerAdView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannerAdView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bannerAdView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        bannerAdView.updateRootViewController(self)
     }
 
     private func setupMap() {

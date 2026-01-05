@@ -27,10 +27,12 @@ class DetailViewController: UIViewController {
     var destination: Destination?
     private var reviews: [Review] = []
     private let locationManager = CLLocationManager()
+    private var bannerAdView: BannerAdView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupBannerAd()
         loadDetail()
         loadReviews()
     }
@@ -52,6 +54,25 @@ class DetailViewController: UIViewController {
         reviewsTableView.register(UINib(nibName: "ReviewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
 
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    private func setupBannerAd() {
+        bannerAdView = BannerAdView()
+        view.addSubview(bannerAdView)
+        bannerAdView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            bannerAdView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannerAdView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bannerAdView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        // ScrollView의 bottom inset 조정
+        scrollView.contentInset.bottom = 50
+        scrollView.scrollIndicatorInsets.bottom = 50
+        
+        bannerAdView.updateRootViewController(self)
     }
 
     private func loadDetail() {
